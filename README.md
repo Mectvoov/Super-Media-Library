@@ -39,9 +39,9 @@
 | **Meta Bind**（`obsidian-meta-bind-plugin`） | 1.5.1 | 作品页记录区的可写控件（状态下拉、评分、封面选择） | ✅ |
 | **QuickAdd**（`quickadd`） | 2.33.1 | 「新增作品」多级菜单，套模板建笔记 | ✅ |
 | Homepage（`homepage`） | 4.6.0 | 打开 vault 直接进媒体库首页 | 推荐 |
-| Douban（`obsidian-douban-plugin`） | 2.5.0 | 从豆瓣抓元数据与封面 | 选用 |
-| Imagine（`albus-imagine`） | 2.1.0 | 图片管理：浏览、去重、删除未引用图片 | 选用 |
-| Imagine 视图右键菜单（`imagine-view-menu`） | 1.0.0 | 本库配套插件，给 Imagine 的视图加右键重命名/复制/删除 | 选用 |
+| **Douban**（`obsidian-douban-plugin`） | 2.5.0 | 从豆瓣抓元数据与封面 | ✅ |
+| **Imagine**（`albus-imagine`） | 2.1.0 | 图片管理：浏览、去重、删除未引用图片 | ✅ |
+| **Imagine 视图右键菜单**（`imagine-view-menu`） | 1.0.0 | 本库配套插件，给 Imagine 的视图加右键重命名/复制/删除 | ✅ |
 | Claudian（`realclaudian`） | 2.3.38 | 在库内与 AI 对话 | 选用 |
 
 Obsidian 版本要求 **≥ 1.13.1**（Meta Bind 的下限）。Imagine、Imagine 视图右键菜单、Claudian 仅支持桌面版。
