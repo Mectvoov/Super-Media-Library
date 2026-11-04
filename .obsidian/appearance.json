@@ -1,0 +1,9 @@
+{
+  "translucency": false,
+  "theme": "moonstone",
+  "enabledCssSnippets": [
+    "media-library"
+  ],
+  "showViewHeader": true,
+  "accentColor": "#6657dd"
+}

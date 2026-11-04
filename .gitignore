@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Obsidian 的窗口状态与缓存：每次开关都会变，提交了只会制造噪音
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+
+# 插件打包文件（体积大头，需要用的人自己装）
+.obsidian/plugins/
+
+# Obsidian 回收站
+.trash/
+
+# Claudian 插件的会话记录与设置（属于工具状态，不是库内容）
+.claudian/
+
+# 所有图片
+*.png
+*.jpg
+*.jpeg
+*.webp
+*.gif
+*.svg
+*.avif
+*.heic

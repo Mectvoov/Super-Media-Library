@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "enabled": [
+    "book",
+    "tv",
+    "movie",
+    "game",
+    "documentary"
+  ],
+  "order": [
+    "book",
+    "tv",
+    "movie",
+    "anime",
+    "game",
+    "variety",
+    "documentary",
+    "music",
+    "short_drama"
+  ],
+  "customTypes": []
+}
