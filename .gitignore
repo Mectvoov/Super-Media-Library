@@ -24,3 +24,6 @@
 *.svg
 *.avif
 *.heic
+
+# 本地 SSH 私钥（仅本机用，绝不提交）
+.ssh-local/
