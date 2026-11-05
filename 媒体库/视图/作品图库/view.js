@@ -165,6 +165,13 @@ const scanGallery = () => {
   return entries.map(entry => entry.path);
 };
 
+// 目录里已经存在的图组（含还没放图的空组）——空组也要能显示出来。
+const scanGroupFolders = () => {
+  const folder = app.vault.getAbstractFileByPath(workFolder);
+  if (!folder || !folder.children) return [];
+  return folder.children.filter(child => child.children).map(child => child.name);
+};
+
 let galleryLinks = scanGallery();
 
 const writeGallery = async links => {
@@ -372,6 +379,8 @@ const countEl = header.createSpan({ cls: "media-gallery-count" });
 const actions = header.createDiv({ cls: "media-gallery-actions" });
 const importButton = actions.createEl("button", { cls: "media-gallery-add", text: "导入图片" });
 const groupButton = actions.createEl("button", { cls: "media-gallery-add is-secondary", text: "导入图组" });
+const emptyGroupButton = actions.createEl("button", { cls: "media-gallery-add is-secondary", text: "新建图组" });
+emptyGroupButton.setAttr("title", "先建一个空图组，稍后再往里放图");
 const groupsWrap = section.createDiv({ cls: "media-gallery-groups" });
 const hint = section.createDiv({ cls: "media-gallery-hint" });
 
@@ -660,19 +669,51 @@ const renderGroup = (group, paths) => {
   applyCollapsed();
 };
 
+// 新建一个空图组：没有图也能先占个位置，之后往里放。
+const createEmptyGroup = async () => {
+  const value = await askText("新建图组", "组名可以留空，之后再命名", "");
+  if (value === null) return;
+  const name = value.trim() ? cleanName(value.trim(), "") : "";
+  // 同一秒内连点两次会撞名，往后顺延一秒
+  let when = Date.now();
+  let group = name ? `${stampGroup(when)} ${name}` : stampGroup(when);
+  while (app.vault.getAbstractFileByPath(`${workFolder}/${group}`)) {
+    when += 1000;
+    group = name ? `${stampGroup(when)} ${name}` : stampGroup(when);
+  }
+  try {
+    await groupFolder(group);
+  } catch (error) {
+    showNotice("新建图组失败。");
+    return;
+  }
+  if (collapsedGroups.has(group)) {
+    collapsedGroups.delete(group);
+    saveCollapsed();
+  }
+  await refreshGallery();
+  render();
+  showNotice(`已新建图组「${groupLabel(group)}」。`);
+};
+
 const render = () => {
   Array.from(groupsWrap.children).forEach(child => child.remove());
   const map = groupedLinks();
-  countEl.setText(galleryLinks.length ? `${galleryLinks.length} 张 · ${map.size} 组` : "");
+  // 空组在目录里存在但 gallery 里没有图，也要列出来
+  for (const group of scanGroupFolders()) if (!map.has(group)) map.set(group, []);
+  const totalGroups = map.size;
+  countEl.setText(galleryLinks.length || totalGroups
+    ? `${galleryLinks.length} 张 · ${totalGroups} 组`
+    : "");
 
-  if (!galleryLinks.length) {
+  if (!galleryLinks.length && !totalGroups) {
     const block = groupsWrap.createDiv({ cls: "media-gallery-group" });
     addTile(block.createDiv({ cls: "media-gallery-grid" }), "", true);
   } else {
     for (const group of groupOrder(map)) renderGroup(group, map.get(group));
   }
 
-  hint.setText(`每次导入都会按时间（精确到秒）新建一个图组，可以点「命名」在时间后面加个名字；移除会删除图片。也可以把图片或文件夹直接拖到这里。`);
+  hint.setText(`每次导入都会按时间（精确到秒）新建一个图组，也可以点「新建图组」先建个空组、之后再往里放图；点「命名」能在时间后面加名字；移除会删除图片。也可以把图片或文件夹直接拖到这里。`);
 };
 
 // 粘贴到「## 图库」一节的图片：按这次粘贴的时间新建一组
@@ -795,6 +836,7 @@ const importFromComputer = async ({ directory = false } = {}) => {
 
 importButton.addEventListener("click", () => importFromComputer());
 groupButton.addEventListener("click", () => importFromComputer({ directory: true }));
+emptyGroupButton.addEventListener("click", () => createEmptyGroup());
 
 // 从系统拖文件进来也走导入
 section.addEventListener("dragover", event => {
